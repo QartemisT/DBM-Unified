@@ -23,7 +23,10 @@ jobs:
 
       - name: Deploy on ${{ matrix.repo }}
         run: |
-          COMMIT_MESSAGE=$(echo '${{ github.event.head_commit.message}}' | sed 's/"/\\"/g')
+          COMMIT_MESSAGE=$(cat <<EOF
+          ${{ github.event.head_commit.message }}
+          EOF)
+          COMMIT_MESSAGE=$(echo $COMMIT_MESSAGE | sed 's/"/\\"/g')
           echo $COMMIT_MESSAGE
           cd /home/runner/work/DBM-Unified/${{ matrix.repo }}
           git remote set-url origin "https://${{ secrets.PERSONAL_TOKEN }}@github.com/DeadlyBossMods/${{ matrix.repo }}.git"
